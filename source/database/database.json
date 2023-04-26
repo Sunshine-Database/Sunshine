@@ -1,0 +1,16 @@
+{
+    "data" : [
+        {
+            "id"     : 0,
+            "name"   : "Andrew",
+            "gender" : "male",
+            "job"    : "solo developer"
+        },
+        {
+            "id"     : 1,
+            "name"   : "Susan",
+            "gender" : "female",
+            "job"    : "fullstack-developer"
+        }
+    ]
+}
