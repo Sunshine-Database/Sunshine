@@ -1,0 +1,22 @@
+{
+    "data": [
+        {
+            "id": 263884030161429435,
+            "name": "Andrew",
+            "gender": "male",
+            "job": "solo developer"
+        },
+        {
+            "name": "Andrew",
+            "gender": "male",
+            "job": "solo developer",
+            "id": 123087368295472802
+        },
+        {
+            "name": "Susan",
+            "gender": "female",
+            "job": "fullstack-developer",
+            "id": 336600485994769533
+        }
+    ]
+}
