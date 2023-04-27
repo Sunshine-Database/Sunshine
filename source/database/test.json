@@ -1,24 +1,3 @@
 {
-    "data": [
-        {
-            "id": 338377721173195309,
-            "name": "Andrew",
-            "gender": "male",
-            "job": "solo developer",
-            "safe": "",
-            "pet": ""
-        },
-        {
-            "id": 244368936766780163,
-            "name": "Susan",
-            "gender": "female",
-            "job": "fullstack-developer",
-            "pet": "kitty",
-            "safe": "dfas"
-        },
-        {
-            "id": 270130042899928243,
-            "name": "test"
-        }
-    ]
+    "data": []
 }
