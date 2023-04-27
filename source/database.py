@@ -1,3 +1,4 @@
+from itertools import groupby
 from filelock import FileLock
 
 import uuid
@@ -5,7 +6,8 @@ import json
 import os
 
 EMPTY: dict[str, list] = {
-    "data" : []
+    'keys' : [],
+    'data' : []
 }
 
 def create_database(filename: str, create_file: bool = True) -> True:
@@ -34,110 +36,22 @@ class Sunshine:
 
     def _get_dump_function(self):
         return json.dump
-
-    def push(self, data_to_push: dict[str, any]) -> int:
+    
+    def model(self, *keys: str):
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
-                try:
-                    if set(database_data['data'][0].keys()) == set(data_to_push.keys()).union([self._id_field]):
-                        data_to_push = {self._id_field : self._get_id()} | data_to_push 
-
-                        database_data['data'].append(data_to_push)
-                        database_file.seek(0)
-                        self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
-                        
-                        return data_to_push[self._id_field]
-                    
-                    else:
-                        data_to_push = {self._id_field : self._get_id()} | data_to_push
-
-                        for i in range(len(database_data['data'])):
-                            for key in set(data_to_push.keys()).union([self._id_field]) - set(database_data['data'][0].keys()):
-                                database_data['data'][i][str(key)] = ''
-
-                        database_data['data'].append(data_to_push)
-                        database_file.seek(0)
-                        self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
-                        
-                        return data_to_push[self._id_field]
-
-                except IndexError:
-                    data_to_push = {self._id_field : self._get_id()} | data_to_push 
-                    database_data['data'].append(data_to_push)
-                    database_file.seek(0)
-                    self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
-
-                    return data_to_push[self._id_field]
+                print(database_data['keys'])
+                database_data['keys'] = [key for key, _ in groupby(['id'] + [key for key in keys])]
                 
-    def get(self, query: dict = {}, count: int = 1) -> list[dict[str, any]]:
-        with self.lock:
-            if not query:
-                try:
-                    with open(self.filename, 'r', encoding = 'utf-8') as database_file:
-                        database_data = self._get_load_function()(database_file)
-                    
-                    if count <= len(database_data['data']):
-                        data = database_data['data'][0: int(count)]
-                        return data
-                    
-                    else:
-                        print('Error: out of range') # raise LengthError
-                
-                except:
-                    return [{'' : ''}]
-            
-            elif query and count == 1:
-                result = []
-                with open(self.filename, 'r', encoding = 'utf-8') as database_file:
-                    database_data = self._get_load_function()(database_file)
-                    for data in database_data['data']:
-                        if all(x in data and data[x] == query[x] for x in query):
-                            result.append(data)
-
-                return result
-
-            else:
-                print('Error: do not use query and count queries in one callback')
-                
-                return [{'' : ''}]
-        
-    # def update(self, data_to_update: dict[str, any]) -> None:
-    #     updated: bool = False
-        
-    #     with self.lock:
-    #         with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
-    #             database_data: dict = self._get_load_function()(database_file)
-    #             result: list = []
-
-    #             if set(data_to_update.keys()).issubset(database_data['data'][0].keys()):
-    #                 for data in database_data['data']:
-    #                     if data[self._id_field] == self
-
-    def delete(self, id: int = 0) -> bool:
-        with self.lock:
-            with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
-                database_data: dict = self._get_load_function()(database_file)
-                result: list = []
-                found: bool  = False
-
-                for data in database_data['data']:
-                    if data[self._id_field] == self._cast_id(id):
-                        found = True
-                    else:
-                        result.append(data)
-
-                if not found:
-                    pass # raise IdNotFoundError
-
-                database_data['data'] = result
                 database_file.seek(0)
                 database_file.truncate()
                 self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                return 0
 
-            return True
-        
-    def drop(self) -> None:
+    def push(self, data_to_push: dict[str, any]):
         with self.lock:
-            with open(self.filename, 'w', encoding = 'utf-8') as database_file:
-                database_file.write(json.dumps(EMPTY, indent = 4))
+            with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
+                database_data: dict = json.load(database_file)
+                
+    

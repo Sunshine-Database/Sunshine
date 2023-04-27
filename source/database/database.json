@@ -1,4 +1,10 @@
 {
+    "keys" : [
+        "id",
+        "name",
+        "gender",
+        "job"
+    ],
     "data" : [
         {
             "id"     : 0,
@@ -11,6 +17,12 @@
             "name"   : "Susan",
             "gender" : "female",
             "job"    : "fullstack-developer"
+        },
+        {
+            "id"     : 2,
+            "name"   : "Karolina",
+            "gender" : "female",
+            "job"    : ""
         }
     ]
 }

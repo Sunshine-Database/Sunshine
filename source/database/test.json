@@ -1,3 +1,20 @@
 {
-    "data": []
+    "keys": [
+        "id",
+        "name",
+        "age",
+        "gender"
+    ],
+    "data": [
+        {
+            "name": "Triss",
+            "age": 19,
+            "gender": "Female"
+        },
+        {
+            "name": "Malloc",
+            "age": 89,
+            "gender": "Male"
+        }
+    ]
 }
