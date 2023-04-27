@@ -41,12 +41,25 @@ class Sunshine:
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
-                print(database_data['keys'])
                 database_data['keys'] = [key for key, _ in groupby(['id'] + [key for key in keys])]
                 
+                for key in database_data['keys']:
+                    if key not in keys and key != 'id':
+                        del database_data['keys'][database_data['keys'].index(key)]
+                        
+                for key in database_data['keys']:
+                    for i in range(len(database_data['data'])):
+                        if not database_data['data'][i].get(key):
+                            database_data['data'][i][key] = 'empty'
+
+                for i in range(len(database_data['data'])):
+                    if set(database_data['data'][i]).symmetric_difference(set(database_data['keys'])):
+                        for key in (set(database_data['data'][i]).symmetric_difference(set(database_data['keys']))):
+                            del database_data['data'][i][key]
+
                 database_file.seek(0)
                 database_file.truncate()
-                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)              
                 return 0
 
     def push(self, data_to_push: dict[str, any]):
@@ -54,4 +67,4 @@ class Sunshine:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
                 
-    
+                

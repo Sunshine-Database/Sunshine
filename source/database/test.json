@@ -2,19 +2,18 @@
     "keys": [
         "id",
         "name",
-        "age",
-        "gender"
+        "age"
     ],
     "data": [
         {
             "name": "Triss",
             "age": 19,
-            "gender": "Female"
+            "id": "empty"
         },
         {
             "name": "Malloc",
             "age": 89,
-            "gender": "Male"
+            "id": "empty"
         }
     ]
 }

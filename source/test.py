@@ -6,9 +6,7 @@ db = Sunshine('./database/test.json')
 
 db.model(
     'name',
-    'age',
-    'gender',
-    'job'
+    'age'
 )
 
 # db.push({
