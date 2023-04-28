@@ -4,10 +4,16 @@ import time
 
 db = Sunshine('./database/test.json')
 
+db.backup('./database/backups')
+
 db.model(
     'name',
-    'age'
+    'age',
+    'test',
+    'jkdjfks'
 )
+
+db.backup('./database/backups')
 
 # db.push({
 #     'name'   : 'Susan',

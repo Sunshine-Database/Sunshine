@@ -1,6 +1,8 @@
 from itertools import groupby
 from filelock import FileLock
+from datetime import datetime
 
+import shutil
 import uuid
 import json
 import os
@@ -37,7 +39,7 @@ class Sunshine:
     def _get_dump_function(self):
         return json.dump
     
-    def model(self, *keys: str):
+    def model(self, *keys: str) -> int:
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
@@ -67,4 +69,8 @@ class Sunshine:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
                 
-                
+    def backup(self, path: str) -> int:
+        if not os.path.exists(path): os.mkdir(path)
+        if '/' in self.filename: filename = self.filename.split('/')[-1]
+        shutil.copy(self.filename, f'{path}/{datetime.strftime(datetime.now(), "%H:%M:%S.%f-%d-%m-%Y")}-{filename}')
+        return 0
