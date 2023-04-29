@@ -1,25 +1,4 @@
 {
-    "keys": [
-        "id",
-        "name",
-        "age",
-        "test",
-        "jkdjfks"
-    ],
-    "data": [
-        {
-            "name": "Triss",
-            "age": 19,
-            "id": "empty",
-            "test": "empty",
-            "jkdjfks": "empty"
-        },
-        {
-            "name": "Malloc",
-            "age": 89,
-            "id": "empty",
-            "test": "empty",
-            "jkdjfks": "empty"
-        }
-    ]
+    "keys": [],
+    "data": []
 }

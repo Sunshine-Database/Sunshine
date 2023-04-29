@@ -68,9 +68,26 @@ class Sunshine:
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
-                
+
+                if set(data_to_push).difference(set(database_data['keys'])): raise Exception('Error: no key in model')
+                data_to_push = {self._id_field : self._get_id()} | data_to_push
+                for key in database_data['keys']:
+                    if key in set(data_to_push).symmetric_difference(set(database_data['keys'])):
+                        data_to_push[key] = 'empty'
+                        
+                database_data['data'].append(data_to_push)
+                database_file.seek(0)
+                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                        
+                return data_to_push[self._id_field]
+
     def backup(self, path: str) -> int:
         if not os.path.exists(path): os.mkdir(path)
         if '/' in self.filename: filename = self.filename.split('/')[-1]
         shutil.copy(self.filename, f'{path}/{datetime.strftime(datetime.now(), "%H:%M:%S.%f-%d-%m-%Y")}-{filename}')
         return 0
+    
+    def drop(self) -> None:
+        with self.lock:
+            with open(self.filename, 'w', encoding = 'utf-8') as database_file:
+                database_file.write(json.dumps(EMPTY, indent = 4))
