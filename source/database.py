@@ -81,6 +81,33 @@ class Sunshine:
                         
                 return data_to_push[self._id_field]
 
+    def get(self, query: dict[str, any] = {}, count: int = 1) -> list[dict[str, any]]:
+        with self.lock:
+            with open(self.filename, 'r', encoding = 'utf-8') as database_file:
+                database_data = self._get_load_function()(database_file)
+                if not query:
+                    if count <= len(database_data['data']):
+                        data = database_data['data'][0: int(count)]
+                        return data
+                    
+                    else:
+                        print('Out of range')
+
+                elif query and count == 1:
+                    result: dict = []
+                    with open(self.filename, 'r', encoding = 'utf-8') as database_file:
+                        database_data = self._get_load_function()(database_file)
+                        for data in database_data['data']:
+                            if all(x in data and data[x] == query[x] for x in query):
+                                result.append(data)
+
+                    return result[0] if len(result) == 1 else result
+
+                else:
+                    print('Error: do not use query and count queries in one req')
+                    
+                    return [{'' : ''}]
+
     def backup(self, path: str) -> int:
         if not os.path.exists(path): os.mkdir(path)
         if '/' in self.filename: filename = self.filename.split('/')[-1]
