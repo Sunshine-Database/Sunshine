@@ -1,0 +1,16 @@
+{
+    "keys": [
+        "id",
+        "name",
+        "age",
+        "wsgdk"
+    ],
+    "data": [
+        {
+            "id": 23221652800377,
+            "name": "Andrey",
+            "age": 12,
+            "wsgdk": true
+        }
+    ]
+}

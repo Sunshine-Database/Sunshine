@@ -28,7 +28,7 @@ class Sunshine:
         self.lock      = FileLock(f'{self.filename}.lock')
 
     def _get_id(self) -> int:
-        return int(str(uuid.uuid4().int)[:18])
+        return int(str(uuid.uuid4().int)[:14])
 
     def _cast_id(self, id: int) -> int:
         return int(id)
@@ -104,9 +104,17 @@ class Sunshine:
                     return result[0] if len(result) == 1 else result
 
                 else:
-                    print('Error: do not use query and count queries in one req')
+                    print('Error: do not use query and count queries in one request')
                     
                     return [{'' : ''}]
+
+    def delete(self, id: int) -> int:
+        with self.lock:
+            with open(self.filename, 'w+', encoding = 'utf-8') as database_file:
+                database_data = self._get_load_function()(database_file)
+
+
+        return 0
 
     def backup(self, path: str) -> int:
         if not os.path.exists(path): os.mkdir(path)
