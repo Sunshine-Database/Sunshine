@@ -39,41 +39,12 @@ class Sunshine:
     def _get_dump_function(self):
         return json.dump
     
-    def model(self, *keys: str) -> int:
-        with self.lock:
-            with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
-                database_data: dict = json.load(database_file)
-                database_data['keys'] = [key for key, _ in groupby(['id'] + [key for key in keys])]
-                
-                for key in database_data['keys']:
-                    if key not in keys and key != 'id':
-                        del database_data['keys'][database_data['keys'].index(key)]
-                        
-                for key in database_data['keys']:
-                    for i in range(len(database_data['data'])):
-                        if not database_data['data'][i].get(key):
-                            database_data['data'][i][key] = 'empty'
-
-                for i in range(len(database_data['data'])):
-                    if set(database_data['data'][i]).symmetric_difference(set(database_data['keys'])):
-                        for key in (set(database_data['data'][i]).symmetric_difference(set(database_data['keys']))):
-                            del database_data['data'][i][key]
-
-                database_file.seek(0)
-                database_file.truncate()
-                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)              
-                return 0
-
     def push(self, data_to_push: dict[str, any]):
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
 
-                if set(data_to_push).difference(set(database_data['keys'])): raise Exception('Error: no key in model')
                 data_to_push = {self._id_field : self._get_id()} | data_to_push
-                for key in database_data['keys']:
-                    if key in set(data_to_push).symmetric_difference(set(database_data['keys'])):
-                        data_to_push[key] = 'empty'
                         
                 database_data['data'].append(data_to_push)
                 database_file.seek(0)
@@ -104,15 +75,52 @@ class Sunshine:
                     return result[0] if len(result) == 1 else result
 
                 else:
-                    print('Error: do not use query and count queries in one request')
-                    
-                    return [{'' : ''}]
+                    raise Exception('Error: do not use query and count queries in one request')
+
+    def update(self, id: int, data_to_update: dict[str, any]) -> int:
+        with self.lock:
+            with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
+                database_data = self._get_load_function()(database_file)
+                result:  list = []
+                updated: bool = False
+
+                for data in database_data['data']:
+                    if data[self._id_field] == self._cast_id(id):
+                        data.update(data_to_update)
+                        updated = True
+
+                    result.append(data)
+                
+                if not updated:
+                    raise Exception('Error: there is no element with given `id`')
+                
+                database_data["data"] = result
+                database_file.seek(0)
+                database_file.truncate()
+                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+
+        return 0
 
     def delete(self, id: int) -> int:
         with self.lock:
-            with open(self.filename, 'w+', encoding = 'utf-8') as database_file:
+            with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data = self._get_load_function()(database_file)
+                result: list = []
+                found:  bool = False
 
+                for data in database_data['data']:
+                    if data.get(self._id_field) == self._cast_id(id):
+                        found = True
+                    else:
+                        result.append(data)
+
+                if not found:
+                    raise Exception('Error: there is no element with given `id`')
+
+                database_data['data'] = result
+                database_file.seek(0)
+                database_file.truncate()
+                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
 
         return 0
 

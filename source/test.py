@@ -4,11 +4,14 @@ import time
 
 db = Sunshine('./database/test2.json')
 
-db.model('name', 'age', 'wsgdk')
+# print(db.push({
+#     'name'  : 'Andrey',
+#     'age'   : 12,
+#     'wsgdk' : True
+# }))
 
-print(db.get({'name' : 'Tim'}))
-print(db.push({
-    'name'  : 'Andrey',
-    'age'   : 12,
-    'wsgdk' : True
+#print(db.get())
+
+print(db.update(11576543615062, {
+    'age' : 25
 }))
