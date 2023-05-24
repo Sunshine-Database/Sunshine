@@ -1,2 +1,3 @@
 # Sunshine
-Sunshine is json database library for python
+
+Lightweight json-database library for Python
