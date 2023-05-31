@@ -24,6 +24,9 @@ class Sunshine:
     Has the following set of methods: push, all, get, update, contains, delete, drop, backup.
     """
     def __init__(self, filename: str, id_field: str = 'id') -> None:
+        """
+        Requires the path to the database-file.
+        """
         create_database(filename)
         
         self.__id_field = id_field
@@ -42,7 +45,7 @@ class Sunshine:
     def __get_dump_function(self):
         return json.dump
     
-    def push(self, data_to_push: dict[str, any]):
+    def push(self, data_to_push: dict[str, any]) -> int:
         """
         Adds an object with the given fields to the database.
         Requires one argument:

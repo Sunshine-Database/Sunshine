@@ -1,0 +1,4 @@
+clear
+python3 setup.py sdist bdist_wheel
+twine upload --skip-existing dist/*
+rm -rf build dist SunshineDB.egg-info
