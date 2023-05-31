@@ -46,14 +46,14 @@ database: Sunshine = Sunshine('../databases/database.json')
 <h3>Method examples will be given using the database variable we set. </h3>
 
 ## Quick Methods
-* ### [0. Sunshine.push](https://github.com/Sunshine-Database/Sunshine#push())
-* ### [1. Sunshine.all](https://github.com/Sunshine-Database/Sunshine#all())
-* ### [2. Sunshine.get](https://github.com/Sunshine-Database/Sunshine#get())
-* ### [3. Sunshine.update](https://github.com/Sunshine-Database/Sunshine#update())
-* ### [4. Sunshine.contains](https://github.com/Sunshine-Database/Sunshine#contains())
-* ### [5. Sunshine.delete](https://github.com/Sunshine-Database/Sunshine#delete())
-* ### [6. Sunshine.drop](https://github.com/Sunshine-Database/Sunshine#drop())
-* ### [7. Sunshine.backup](https://github.com/Sunshine-Database/Sunshine#backup())
+* ### [0. Sunshine.push](https://github.com/Sunshine-Database/Sunshine#push)
+* ### [1. Sunshine.all](https://github.com/Sunshine-Database/Sunshine#all)
+* ### [2. Sunshine.get](https://github.com/Sunshine-Database/Sunshine#get)
+* ### [3. Sunshine.update](https://github.com/Sunshine-Database/Sunshine#update)
+* ### [4. Sunshine.contains](https://github.com/Sunshine-Database/Sunshine#contains)
+* ### [5. Sunshine.delete](https://github.com/Sunshine-Database/Sunshine#delete)
+* ### [6. Sunshine.drop](https://github.com/Sunshine-Database/Sunshine#drop)
+* ### [7. Sunshine.backup](https://github.com/Sunshine-Database/Sunshine#backup)
 
 ### push()
 Adds an object with the given fields to the database. <br>
