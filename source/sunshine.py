@@ -27,20 +27,20 @@ class Sunshine:
     def __init__(self, filename: str, id_field: str = 'id') -> None:
         create_database(filename)
         
-        self._id_field = id_field
-        self.filename  = filename
-        self.lock      = FileLock(f'{self.filename}.lock')
+        self.__id_field = id_field
+        self.filename   = filename
+        self.lock       = FileLock(f'{self.filename}.lock')
 
-    def _get_id(self) -> int:
+    def __get_id(self) -> int:
         return int(str(uuid.uuid4().int)[:14])
 
-    def _cast_id(self, id: int) -> int:
+    def __cast_id(self, id: int) -> int:
         return int(id)
 
-    def _get_load_function(self):
+    def __get_load_function(self):
         return json.load
 
-    def _get_dump_function(self):
+    def __get_dump_function(self):
         return json.dump
     
     def push(self, data_to_push: dict[str, any]):
@@ -53,13 +53,13 @@ class Sunshine:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
                 database_data: dict = json.load(database_file)
 
-                data_to_push = {self._id_field : self._get_id()} | data_to_push
+                data_to_push = {self.__id_field : self.__get_id()} | data_to_push
                         
                 database_data['data'].append(data_to_push)
                 database_file.seek(0)
-                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                self.__get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
                         
-                return data_to_push[self._id_field]
+                return data_to_push[self.__id_field]
 
     def all(self) -> list[dict[str, any]]:
         """
@@ -67,7 +67,7 @@ class Sunshine:
         """
         with self.lock:
             with open(self.filename, 'r', encoding = 'utf-8') as database_file:
-                return self._get_load_function()(database_file)['data']
+                return self.__get_load_function()(database_file)['data']
 
     def get(self, query: dict[str, any] = {}, count: int = 1) -> list[dict[str, any]]:
         """
@@ -80,7 +80,7 @@ class Sunshine:
         """
         with self.lock:
             with open(self.filename, 'r', encoding = 'utf-8') as database_file:
-                database_data = self._get_load_function()(database_file)
+                database_data = self.__get_load_function()(database_file)
                 if not query:
                     if count <= len(database_data['data']):
                         data = database_data['data'][0: int(count)]
@@ -92,7 +92,7 @@ class Sunshine:
                 elif query and count == 1:
                     result: dict = []
                     with open(self.filename, 'r', encoding = 'utf-8') as database_file:
-                        database_data = self._get_load_function()(database_file)
+                        database_data = self.__get_load_function()(database_file)
                         for data in database_data['data']:
                             if all(x in data and data[x] == query[x] for x in query):
                                 result.append(data)
@@ -111,12 +111,12 @@ class Sunshine:
         """
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
-                database_data = self._get_load_function()(database_file)
+                database_data = self.__get_load_function()(database_file)
                 result:  list = []
                 updated: bool = False
 
                 for data in database_data['data']:
-                    if data[self._id_field] == self._cast_id(id):
+                    if data[self.__id_field] == self.__cast_id(id):
                         data.update(data_to_update)
                         updated = True
 
@@ -128,7 +128,7 @@ class Sunshine:
                 database_data["data"] = result
                 database_file.seek(0)
                 database_file.truncate()
-                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                self.__get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
 
         return 0
 
@@ -150,12 +150,12 @@ class Sunshine:
         """
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
-                database_data = self._get_load_function()(database_file)
+                database_data = self.__get_load_function()(database_file)
                 result: list = []
                 found:  bool = False
 
                 for data in database_data['data']:
-                    if data.get(self._id_field) == self._cast_id(id):
+                    if data.get(self.__id_field) == self.__cast_id(id):
                         found = True
                     else:
                         result.append(data)
@@ -166,7 +166,7 @@ class Sunshine:
                 database_data['data'] = result
                 database_file.seek(0)
                 database_file.truncate()
-                self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
+                self.__get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
 
         return 0
     
