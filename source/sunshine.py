@@ -1,7 +1,6 @@
-from itertools import groupby
-from filelock  import FileLock
-from datetime  import datetime
-from messages  import Message
+from source.messages import Message
+from filelock        import FileLock
+from datetime        import datetime
 
 import shutil
 import uuid
@@ -48,6 +47,8 @@ class Sunshine:
         Adds an object with the given fields to the database.
         Requires one argument:
             data_to_push (dictionary[string, any]) - the key-value dictionary to be added to the database.
+
+        Returns ID.
         """
         with self.lock:
             with open(self.filename, 'r+', encoding = 'utf-8') as database_file:
@@ -102,7 +103,7 @@ class Sunshine:
                 else:
                     Message('do not use query and counter in one get-query', 'error')
 
-    def update(self, id: int, data_to_update: dict[str, any]) -> int:
+    def update(self, id: int, data_to_update: dict[str, any]) -> None:
         """
         Updates a database object with an ID.
         Requires two arguments:
@@ -130,8 +131,6 @@ class Sunshine:
                 database_file.truncate()
                 self.__get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
 
-        return 0
-
     def contains(self, key: str, value: any) -> bool:
         """
         Checks by query, if an element is contained in the database.
@@ -139,10 +138,12 @@ class Sunshine:
             key   (string),
             value (any).
         These arguments will be searched in the database.
+
+        Returns boolean.
         """
         return True if self.get(query = {key : value}) != [] else False
 
-    def delete(self, id: int) -> int:
+    def delete(self, id: int) -> None:
         """
         Removes the object with the given ID from the database.
         Requires one argument:
@@ -167,8 +168,6 @@ class Sunshine:
                 database_file.seek(0)
                 database_file.truncate()
                 self.__get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
-
-        return 0
     
     def drop(self) -> None:
         """
@@ -178,13 +177,15 @@ class Sunshine:
             with open(self.filename, 'w', encoding = 'utf-8') as database_file:
                 database_file.write(json.dumps(EMPTY, indent = 4))
 
-    def backup(self, path: str) -> int:
+    def backup(self, path: str) -> None:
         """
         Creates a database backup at the given path.
         Requires one argument:
             path (string) - path to the folder where the backup-file will be saved.
         """
         if not os.path.exists(path): os.mkdir(path)
-        if '/' in self.filename: filename = self.filename.split('/')[-1]
-        shutil.copy(self.filename, f'{path}/{datetime.strftime(datetime.now(), "%H:%M:%S.%f-%d-%m-%Y")}-{filename}')
-        return 0
+        filename: str = self.filename.split('/')[-1] if '/' in self.filename else self.filename
+        shutil.copy(
+            self.filename, 
+            f'{path}/{datetime.strftime(datetime.now(), "%H:%M:%S.%f-%d-%m-%Y")}-{filename}'
+        )
