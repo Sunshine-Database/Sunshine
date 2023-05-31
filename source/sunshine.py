@@ -51,6 +51,11 @@ class Sunshine:
                         
                 return data_to_push[self._id_field]
 
+    def get_all(self) -> list[dict[str, any]]:
+        with self.lock:
+            with open(self.filename, 'r', encoding = 'utf-8') as database_file:
+                return self._get_load_function()(database_file)['data']
+
     def get(self, query: dict[str, any] = {}, count: int = 1) -> list[dict[str, any]]:
         with self.lock:
             with open(self.filename, 'r', encoding = 'utf-8') as database_file:
@@ -99,6 +104,9 @@ class Sunshine:
                 self._get_dump_function()(database_data, database_file, indent = 4, ensure_ascii = False)
 
         return 0
+
+    def contains(self, key: str, value: any) -> bool:
+        return True if self.get(query = {key : value}) != [] else False
 
     def delete(self, id: int) -> int:
         with self.lock:
