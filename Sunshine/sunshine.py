@@ -14,7 +14,7 @@ EMPTY: dict[str, list] = {
 def create_database(filename: str, create_file: bool = True) -> True:
     if filename.endswith('.json'):
         if create_file and not os.path.exists(filename):
-            with open(filename, 'w') as database_file:
+            with open(filename, 'w', encoding = 'utf-8') as database_file:
                 database_file.write(json.dumps(EMPTY, indent = 4))
     
 
