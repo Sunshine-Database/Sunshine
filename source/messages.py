@@ -1,6 +1,9 @@
 from colorama import Fore, Style
 
 class Message:
+    """
+    Message-class used to issue errors, success messages, and warnings.
+    """
     def __init__(self, text: str, type: str) -> None:
         self.text = text
         self.type = type
