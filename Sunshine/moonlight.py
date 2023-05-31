@@ -37,6 +37,15 @@ class Moonlight:
         """
         return self.database.get(query = query, count = count)
     
+    async def get_parameter(self, query, key) -> list[dict[str, any]]:
+        """
+        (Async) Returns a value from database object using a query.
+        Requires two arguments:
+            query (dictionary[string, any]) - a key-value dictionary that will be used to select elements,
+            key   (string)                  - a key.
+        """
+        return self.database.get(query = query)[key]
+    
     async def update(self, id: int, data_to_update: dict[str, any]) -> None:
         """
         (Async) Updates a database object with an ID.
