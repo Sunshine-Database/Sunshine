@@ -107,7 +107,7 @@ You cannot use both arguments together.
 <br>
 
 ```Python
-data = database.get(
+data: list[dict[str, any]] = database.get(
     query = {
         'job' : 'Pied Piper Inc.'
     }
@@ -125,7 +125,7 @@ print(data)
 # ]
 
 # And the same will be displayed if you call the get-method like this
-data = database.get(count = 1)
+data: list[dict[str, any]] = database.get(count = 1)
 ```
 
 ### update()
@@ -166,13 +166,13 @@ Returns boolean.
 <br>
 
 ```Python
-data = database.contains('name', 'Bertram Gilfoyle')
+data: bool = database.contains('name', 'Bertram Gilfoyle')
 print(data)
 # output >> True
 #           ^^^^
 # contains-method returns boolean
 
-data = database.contains('name', 'Dinesh Chugtai')
+data: bool = database.contains('name', 'Dinesh Chugtai')
 print(data)
 # output >> False
 ```
