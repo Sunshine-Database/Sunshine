@@ -1,4 +1,4 @@
-from Sunshine.sunshine import Sunshine
+from sunshine import Sunshine
 
 class Moonlight:
     """

@@ -12,9 +12,12 @@ class Message:
         match self.type:
             case 'success':
                 print(Fore.GREEN  + f'Success: {self.text}' + Style.RESET_ALL)
+            
             case 'warning':
                 print(Fore.YELLOW + f'Warning: {self.text}' + Style.RESET_ALL)
+            
             case 'error':
                 print(Fore.RED    + f'Error:   {self.text}' + Style.RESET_ALL)
+            
             case _:
                 return
